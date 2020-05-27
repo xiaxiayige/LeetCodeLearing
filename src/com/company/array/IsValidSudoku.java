@@ -1,9 +1,55 @@
 package com.company.array;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
+/***
+ *
+ * https://leetcode-cn.com/explore/interview/card/top-interview-questions-easy/1/array/30/
+ *
+ * 有效的数独
+ * 判断一个 9x9 的数独是否有效。只需要根据以下规则，验证已经填入的数字是否有效即可。
+ *
+ * 数字 1-9 在每一行只能出现一次。
+ * 数字 1-9 在每一列只能出现一次。
+ * 数字 1-9 在每一个以粗实线分隔的 3x3 宫内只能出现一次。
+ *
+ * 示例 1:
+ *
+ * 输入:
+ * [
+ *   ["5","3",".",".","7",".",".",".","."],
+ *   ["6",".",".","1","9","5",".",".","."],
+ *   [".","9","8",".",".",".",".","6","."],
+ *   ["8",".",".",".","6",".",".",".","3"],
+ *   ["4",".",".","8",".","3",".",".","1"],
+ *   ["7",".",".",".","2",".",".",".","6"],
+ *   [".","6",".",".",".",".","2","8","."],
+ *   [".",".",".","4","1","9",".",".","5"],
+ *   [".",".",".",".","8",".",".","7","9"]
+ * ]
+ * 输出: true
+ *
+ *
+ * 示例 2:
+ *
+ * 输入:
+ * [
+ *   ["8","3",".",".","7",".",".",".","."],
+ *   ["6",".",".","1","9","5",".",".","."],
+ *   [".","9","8",".",".",".",".","6","."],
+ *   ["8",".",".",".","6",".",".",".","3"],
+ *   ["4",".",".","8",".","3",".",".","1"],
+ *   ["7",".",".",".","2",".",".",".","6"],
+ *   [".","6",".",".",".",".","2","8","."],
+ *   [".",".",".","4","1","9",".",".","5"],
+ *   [".",".",".",".","8",".",".","7","9"]
+ * ]
+ * 输出: false
+ * 解释: 除了第一行的第一个数字从 5 改为 8 以外，空格内其他数字均与 示例1 相同。
+ *      但由于位于左上角的 3x3 宫内有两个 8 存在, 因此这个数独是无效的。
+ *
+ *
+ */
 public class IsValidSudoku {
 
     public static void main(String[] args) {
@@ -20,22 +66,109 @@ public class IsValidSudoku {
                 {'.', '.', '.', '4', '1', '9', '.', '.', '5'},
                 {'.', '.', '.', '.', '8', '.', '.', '7', '9'}
         };
-        isValidSudoku.isValidSudoku(shudu);
+
+        boolean validSudoku = isValidSudoku.isValidSudoku(shudu);
+
+        System.out.println("validSudoku = " + validSudoku);
 
     }
 
+    /***
+     * 思路1
+     *
+     * 1.先判断每一个横轴的数字是否有相同的，
+     * 2.然后判断每一个竖轴是否有数字相同。
+     * 3.然后判断附近相邻的9个数是否有相同的
+     *
+     * @param board
+     * @return
+     */
     public boolean isValidSudoku(char[][] board) {
 
-        for (int i = 0; i < board.length; i++) {
-            Map<String, String> map = new HashMap<>();
-            for (char c : board[i]) {
-              
-                if (map.containsKey("" + c)) {
-                    return false;
-                }
+        int len = board.length;
+
+        for (int i = 0; i < len; i++) {
+            //1.先检查横轴
+            int[] row = new int[len];
+            int[] column = new int[len];
+            int[] nineNumber = new int[len];
+
+            for (int j = 0; j < len; j++) {
+                row[j] = (int) board[i][j];
+                column[j] = board[j][i];
+
+                int x=0,y=0;
+                nineNumber[i] =board[x][y];
             }
+
+            if (checkSameNumber(row)) {
+                System.out.println("横轴出现重复 i = " + i);
+                return false;
+            }
+
+            if (checkSameNumber(column)) {
+                System.out.println("竖轴出现重复 i = " + i);
+                return false;
+            }
+
+            if (checkSameNumber(nineNumber)) {
+                System.out.println("九宫格内出现重复数据 i = " + i);
+                return false;
+            }
+
+            //3.3*3九宫格
+//            {'5', '3', '.', '.', '7', '.', '.', '.', '.'},
+//            {'6', '.', '.', '1', '9', '5', '.', '.', '.'},
+//            {'.', '9', '8', '.', '.', '.', '.', '6', '.'},
+
+//            {'8', '.', '.', '.', '6', '.', '.', '.', '3'},
+//            {'4', '.', '.', '8', '.', '3', '.', '.', '1'},
+//            {'7', '.', '.', '.', '2', '.', '.', '.', '6'},
+
+//            {'.', '6', '.', '.', '.', '.', '2', '8', '.'},
+//            {'.', '.', '.', '4', '1', '9', '.', '.', '5'},
+//            {'.', '.', '.', '.', '8', '.', '.', '7', '9'}
+
+
+
+//第一组数据
+//            [0][0]   [0][1]      [0][2]           ---------          [0][3]   [0][4]      [0][5]
+//
+//            [1][0]   [1][1]      [1][2]           ---------          [1][3]   [1][4]      [1][5]
+//
+//            [2][0]   [2][1]      [2][2]           ---------          [2][3]   [2][4]      [2][5]
+//---------------------------------------           ---------          -----------------------------------------
+//            [3][0]   [3][1]      [3][2]           ---------          [3][3]   [3][4]      [3][5]
+
+//            [4][0]   [4][1]      [4][2]           ---------          [4][3]   [2][4]      [2][5]
+
+//            [5][0]   [5][1]      [5][2]           ---------          [5][3]   [2][4]      [2][5]
+
+
+
         }
 
+        return true;
+    }
+
+    /***
+     * 检查是否有重复的数据
+     * @param numbers
+     * @return
+     */
+    public boolean checkSameNumber(int[] numbers) {
+        Map<Integer, Integer> map = new HashMap<>();
+
+        for (Integer number : numbers) {
+            if (number == 46) continue;
+
+            if (map.containsKey(number)) {
+                return true;
+            } else {
+                map.put(number, number);
+            }
+        }
         return false;
+
     }
 }
