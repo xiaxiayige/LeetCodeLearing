@@ -74,7 +74,7 @@ public class IsValidSudoku {
     }
 
     /***
-     * 思路1
+     * 思路
      *
      * 1.先判断每一个横轴的数字是否有相同的，
      * 2.然后判断每一个竖轴是否有数字相同。
@@ -83,7 +83,7 @@ public class IsValidSudoku {
      * @param board
      * @return
      */
-    public boolean isValidSudoku(char[][] board) {
+    public boolean isValidSudoku2(char[][] board) {
 
         int len = board.length;
 
@@ -96,11 +96,13 @@ public class IsValidSudoku {
             for (int j = 0; j < len; j++) {
                 row[j] = (int) board[i][j];
                 column[j] = board[j][i];
-
-                int x=0,y=0;
-                nineNumber[i] =board[x][y];
+                int x = i / 3 * 3 + j / 3; //横轴上的坐标计算
+                int y = i % 3 * 3 + j % 3; //处于竖轴上的坐标计算
+                nineNumber[j] = board[x][y];
+                System.out.print(nineNumber[j] + " ");
             }
 
+            System.out.println();
             if (checkSameNumber(row)) {
                 System.out.println("横轴出现重复 i = " + i);
                 return false;
@@ -130,7 +132,6 @@ public class IsValidSudoku {
 //            {'.', '.', '.', '.', '8', '.', '.', '7', '9'}
 
 
-
 //第一组数据
 //            [0][0]   [0][1]      [0][2]           ---------          [0][3]   [0][4]      [0][5]
 //
@@ -144,6 +145,78 @@ public class IsValidSudoku {
 
 //            [5][0]   [5][1]      [5][2]           ---------          [5][3]   [2][4]      [2][5]
 
+
+        }
+
+        return true;
+    }
+
+    /***
+     * 方法二
+     * @param board
+     * @return
+     */
+    public boolean isValidSudoku(char[][] board) {
+
+        int len = board.length;
+
+        for (int i = 0; i < len; i++) {
+            //1.先检查横轴
+            Map<Integer, Integer> rowMap = new HashMap<>();
+            Map<Integer, Integer> clow = new HashMap<>();
+            Map<Integer, Integer> nine = new HashMap<>();
+
+            for (int j = 0; j < len; j++) {
+
+                int x = i / 3 * 3 + j / 3; //横轴上的坐标计算
+                //y的偏移计算
+                int y = i % 3 * 3 + j % 3; //处于竖轴上的坐标计算
+
+                if (rowMap.containsKey((int)board[i][j]) && rowMap.get((int)board[i][j])!=46) {
+                    return false;
+                }
+
+                if (clow.containsKey((int)board[j][i]) && clow.get((int)board[j][i])!=46) {
+                    return false;
+                }
+
+                if (nine.containsKey((int)board[x][y]) && nine.get((int)board[x][y])!=46) {
+                    return false;
+                }
+
+                rowMap.put((int) board[i][j], (int) board[i][j]);
+                clow.put((int) board[j][i], (int) board[j][i]);
+                nine.put((int) board[x][y], (int) board[x][y]);
+
+            }
+
+
+            //3.3*3九宫格
+//            {'5', '3', '.', '.', '7', '.', '.', '.', '.'},
+//            {'6', '.', '.', '1', '9', '5', '.', '.', '.'},
+//            {'.', '9', '8', '.', '.', '.', '.', '6', '.'},
+
+//            {'8', '.', '.', '.', '6', '.', '.', '.', '3'},
+//            {'4', '.', '.', '8', '.', '3', '.', '.', '1'},
+//            {'7', '.', '.', '.', '2', '.', '.', '.', '6'},
+
+//            {'.', '6', '.', '.', '.', '.', '2', '8', '.'},
+//            {'.', '.', '.', '4', '1', '9', '.', '.', '5'},
+//            {'.', '.', '.', '.', '8', '.', '.', '7', '9'}
+
+
+//第一组数据
+//            [0][0]   [0][1]      [0][2]           ---------          [0][3]   [0][4]      [0][5]
+//
+//            [1][0]   [1][1]      [1][2]           ---------          [1][3]   [1][4]      [1][5]
+//
+//            [2][0]   [2][1]      [2][2]           ---------          [2][3]   [2][4]      [2][5]
+//---------------------------------------           ---------          -----------------------------------------
+//            [3][0]   [3][1]      [3][2]           ---------          [3][3]   [3][4]      [3][5]
+
+//            [4][0]   [4][1]      [4][2]           ---------          [4][3]   [2][4]      [2][5]
+
+//            [5][0]   [5][1]      [5][2]           ---------          [5][3]   [2][4]      [2][5]
 
 
         }
@@ -163,6 +236,7 @@ public class IsValidSudoku {
             if (number == 46) continue;
 
             if (map.containsKey(number)) {
+                System.out.println("重复数字为 = " + number);
                 return true;
             } else {
                 map.put(number, number);
